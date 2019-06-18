@@ -10,7 +10,7 @@
 	chance_arrive = 10
 
 	max_goods_buy = 3
-	max_goods_sell = 1
+	max_goods_sell = 2
 
 	base_goods_buy = list(/datum/commodity/trader/vurdalak/meat,
 	/datum/commodity/trader/vurdalak/brains,
@@ -18,7 +18,8 @@
 	/datum/commodity/trader/vurdalak/toxicvenne,
 	/datum/commodity/trader/vurdalak/amanita,
 	/datum/commodity/trader/vurdalak/roburger)
-	base_goods_sell = list(/datum/commodity/trader/vurdalak/artifact)
+	base_goods_sell = list(/datum/commodity/trader/vurdalak/artifact,
+	/datum/commodity/trader/vurdalak/identification_scroll)
 
 	dialogue_greet = list("Well met. We have several items for sale, as well as several desired articles.",
 	"Greetings. We believe it would be mutually profitable for the both of us to engage in commerce.",
@@ -78,6 +79,14 @@
 	alt_type_chance = 95
 	possible_names = list("We are selling artifacts of alien origin. We cannot verify their purpose.",
 	"We have a collection of alien artifacts you may be interested in.")
+
+/datum/commodity/trader/vurdalak/identification_scroll
+	comname = "Scroll of Identify"
+	comtype = /obj/item/raw_material/fabric
+	amount = 6
+	price_boundary = list(2000,3000)
+	possible_names = list("We have collected several ancient scrolls that can make clear the unknown.",
+	"Residing on a research station, we believe you will find interest in this item.")
 
 // Vurdalak wants these things
 
