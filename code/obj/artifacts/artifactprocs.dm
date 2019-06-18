@@ -168,6 +168,8 @@
 		var/turf/T = get_turf(src)
 		T.visible_message("<b>[src] [A.activ_text]</b>")
 	A.activated = 1
+	if(A.identified == 0)
+		src.ArtifactIdentified(0) //reveal the internal name of the artifact
 	src.overlays += A.fx_image
 	A.effect_activate(src)
 
@@ -184,7 +186,51 @@
 	src.overlays = null
 	A.effect_deactivate(src)
 
+/obj/proc/ArtifactIdentified(var/tmp/fullReveal)  //sets the artifact's name and description to what kind of artifact it is, how it is activated and what the random internal name for it has been assigned
+	var/datum/artifact/artifactDatum = src.artifact
+
+	var/tmp/newname = artifactDatum.internal_name
+
+	if(fullReveal)
+		newname += ", an [initial(src.name)]"
+		var/tmp/newHint = "There's a phrase engraved on the artifact: "
+		var/datum/artifact_trigger/anArtifactTrigger
+		for(anArtifactTrigger in artifactDatum.triggers)
+			newHint += anArtifactTrigger.stimulus_required += " "  //artifacts don't have multiple triggers as of now but they're stored in a list and so if they would they'll be seperated by a space
+
+		if (istext(artifactDatum.examine_hint))
+			artifactDatum.examine_hint += " [newHint]"
+		else
+			artifactDatum.examine_hint = newHint
+		artifactDatum.identified = 1
+	src.name = newname
+
+
 /obj/proc/Artifact_attackby(obj/item/W as obj, mob/user as mob)
+	if (istype(W, /obj/item/identification_scroll))
+		var/datum/artifact/A = src.artifact
+		var/obj/item/identification_scroll/usedScroll = W
+		if(A.identified == 0)
+			if(usedScroll.used == 0)
+				usedScroll.used = 1
+				playsound(src.loc, "sound/effects/flameswoosh.ogg", 100, 1)
+				src.visible_message("<span style=\"color:red\">As [user.name] reads from the [W.name] it fades into ash!</span>")
+				qdel(W)
+				src.visible_message("<span style=\"color:red\">An engraving appears on [src.name]'s surface!</span>")
+				src.ArtifactIdentified(1)
+		else  // artifact already identified
+			if(usedScroll.used == 0)
+				if(prob(10))  // oops
+					usedScroll.used = 1
+					playsound(src.loc, "sound/effects/flameswoosh.ogg", 100, 1)
+					src.visible_message("<span style=\"color:red\">As [user.name] reads from the [W.name] it fades into ash!</span>")
+					qdel(W)
+					src.visible_message("<span style=\"color:red\">[src.name] looks identifiably identified, more than it already was!</span>")
+				else
+					src.visible_message("<span style=\"color:red\">[user.name] tries to read from the [W.name] but nothing happens!</span>")
+		return
+
+
 	if (istype(W, /obj/item/cargotele)) // Re-added (Convair880).
 		var/obj/item/cargotele/CT = W
 		CT.cargoteleport(src, user)

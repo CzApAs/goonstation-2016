@@ -23,6 +23,7 @@
 	var/deact_sound = null       // Guess.
 	var/deact_text = null        // No really, have a wild guess.
 	var/scramblechance = 10      // how likely this artifact is to look like a type it isnt
+	var/identified = 0			 // New: has the artifact been identified already with an identification scroll?
 
 	var/list/faults = list()      // Automatically handled
 	var/list/fault_types = list() // this is set up based on the artifact's origin type

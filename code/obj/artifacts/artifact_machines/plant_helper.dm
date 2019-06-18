@@ -1,5 +1,5 @@
 /obj/machinery/artifact/plant_helper
-	name = "artifact plant_helper"
+	name = "artifact plant helper"
 	associated_datum = /datum/artifact/plant_helper
 
 /datum/artifact/plant_helper
