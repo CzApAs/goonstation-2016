@@ -193,15 +193,16 @@
 
 	if(fullReveal == 1)
 		newname += ", an [initial(src.name)]"
-		var/tmp/newHint = "There's a phrase engraved on the artifact: "
+		var/tmp/newHint
 		var/datum/artifact_trigger/anArtifactTrigger
-		for(anArtifactTrigger in artifactDatum.triggers)
-			newHint += "[anArtifactTrigger.stimulus_required] " //artifacts don't have multiple triggers as of now but they're stored in a list and so if they would they'll be seperated by a space
-
-		if (istext(artifactDatum.examine_hint))
-			artifactDatum.examine_hint += " [newHint]"
-		else
-			artifactDatum.examine_hint = newHint
+		if (artifactDatum.triggers != null && artifactDatum.triggers.len)
+			newHint = "There's some writing engraved on the artifact: "
+			for(anArtifactTrigger in artifactDatum.triggers)
+				newHint += "[anArtifactTrigger.stimulus_required] " //artifacts don't have multiple triggers as of now but they're stored in a list and so if they would they'll be seperated by a space
+		//if (istext(artifactDatum.examine_hint))
+		artifactDatum.examine_hint += " [newHint]"
+		//else
+			//artifactDatum.examine_hint = newHint
 		artifactDatum.identified = 1
 	src.name = newname
 

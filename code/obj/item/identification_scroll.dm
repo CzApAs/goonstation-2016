@@ -13,13 +13,8 @@
 	throw_speed = 4
 	throw_range = 20
 	var/used = 0
-	var/global/scroll_label = pick("ZELGO MER", "JUYED AWK YACC", "NR 9", "XIXAXA XOXAXA XUXAXA", "PRATYAVAYAH", "DAIYEN FOOELS", "LEP GEX VEN ZEA", "PRIRUTSENIE", "YUM YUM", "KERNOD WEL", "ELAM EBOW", "HACKEM MUCHE", "VELOX NEB", "READ ME")
-	desc = "An old scroll."
+	desc = "An old scroll that reads KERNOD WEL"
 
-	New()
-		..()
-		desc = "A scroll that reads [scroll_label]"
-		return
 
 	attack(mob/living/carbon/M as mob, mob/living/carbon/user as mob)
 		if(used == 0)

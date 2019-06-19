@@ -84,7 +84,7 @@
 	comname = "Scroll of Identify"
 	comtype = /obj/item/identification_scroll
 	amount = 6
-	price_boundary = list(2000,3000)
+	price_boundary = list(1750,2500)
 	possible_names = list("We have collected several ancient scrolls that can make clear the unknown.",
 	"Residing on a research station, we believe you will find interest in this item.")
 
