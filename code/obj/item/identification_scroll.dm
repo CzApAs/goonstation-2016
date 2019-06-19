@@ -31,4 +31,6 @@
 			if(cmptext(message, "Blessed"))
 				if(iscarbon(M) && M.reagents)
 					M.reagents.add_reagent("glitter_harmless", 2)  //some fancy glitter on blessed people
+			user.u_equip(src)
+			src.dropped()
 			qdel(src)

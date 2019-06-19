@@ -82,7 +82,7 @@
 
 /datum/commodity/trader/vurdalak/identification_scroll
 	comname = "Scroll of Identify"
-	comtype = /obj/item/raw_material/fabric
+	comtype = /obj/item/identification_scroll
 	amount = 6
 	price_boundary = list(2000,3000)
 	possible_names = list("We have collected several ancient scrolls that can make clear the unknown.",
