@@ -381,7 +381,7 @@
 
 	attackby(obj/item/W as obj, mob/user as mob)
 		if (istype(W, /obj/item/reagent_containers/food/snacks/instant_noodles))
-			var /obj/item/reagent_containers/food/snacks/instant_noodles/drynoodles = W
+			var/obj/item/reagent_containers/food/snacks/instant_noodles/drynoodles = W
 			var/obj/newinstantnoodles = new /obj/item/reagent_containers/food/snacks/soup/instant_noodles_bowl(get_turf(src), drynoodles.amount)
 			newinstantnoodles.reagents = src.reagents
 			if (newinstantnoodles.reagents)
@@ -391,7 +391,7 @@
 				newinstantnoodles.reagents = new /datum/reagents(50)
 				newinstantnoodles.reagents.my_atom = newinstantnoodles
 			newinstantnoodles.on_reagent_change()
-			user.visible_message("<b>[user]</b> drops the [drynoodles] into [src].", "You drop the [drynoodles] into [src].")
+			user.visible_message("<b>[user]</b> drops [drynoodles] into [src].", "You drop [drynoodles] into [src].")
 			qdel(drynoodles)
 			qdel(src)
 
