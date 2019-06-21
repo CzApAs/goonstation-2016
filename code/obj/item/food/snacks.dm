@@ -567,6 +567,153 @@
 	is_open_container()
 		return 1
 
+
+///////////////////// assjam instantnoodlios by Gerhazo, inspired and based on sprites by Jaimsey ///////////////////////////
+/obj/item/reagent_containers/food/snacks/condiment/noodles_flavor_packet
+	name = "flavor packet"
+	desc = "A flavor packet"
+	icon_state = "ketchup"
+	initial_volume = 50
+
+	New()
+		..()
+		reagents.add_reagent("salt",20) // introducing a greater ripoff than discount dan's, all the flavors are identical. at least none of them kill you
+		reagents.add_reagent("chickensoup", 10)
+		reagents.add_reagent("beff", 5)
+		reagents.add_reagent("pepperoni", 5)
+
+		var/probChance = 50
+		var/adjective = pick("Fresh", "Breathtaking", "Brand New", "Experimental", "Classic", "Refined")
+		var/flavor = pick("Sriracha Chicken", "Beef", "Roast Chicken", "Pork", "Oriental", "Chili", "Shrimp", "Hot Chicken", "Hot Chicken Nuclear", "Chili Lime Shrimp")
+		while(prob(probChance))
+			probChance--
+			var/bonusAdjective = pick("Bottom", "Maru-San", "Leftovers", "Good Ending", "Of Destruction", "Clown's Choice", "Surprise", "Magic", "Perfection")
+			flavor += " [bonusAdjective]"
+		src.desc = "It reads: [adjective] [flavor] flavor!"
+
+	afterattack(atom/target, mob/user, flag)
+		if (istype(target, /obj/item/reagent_containers/food/snacks/))
+			if (istype(target, /obj/item/reagent_containers/food/snacks/instant_noodles/))
+				boutput(user, "<span style=\"color:blue\">You'd rather put the noodles into a bowl first to prevent spilling the contents.</span>")
+			else
+				user.visible_message("<span style=\"color:blue\">[user] adds [src] to [target].</span>", "<span style=\"color:blue\">You add [src] to [target].</span>")
+				if (src.reagents)
+					src.reagents.trans_to(target, 100)
+				qdel (src)
+		else return
+
+
+/obj/item/instant_noodles_packet
+	name = "a packet of instant noodles"
+	desc = "Cheap packaging containing nutrition, sorrow and dissapointment all in one. The instructions on the back say to dump out the noodles into a bowl and add the flavor packet or any liquid of choice. That's much more convenient than boiling water."
+	icon = 'icons/obj/foodNdrink/food_snacks.dmi'
+	icon_state = "instantnoodles_closed"
+	w_class = 2
+	var/open = 0
+	var/obj/item/reagent_containers/food/snacks/instant_noodles/ourNoodles
+	var/obj/item/reagent_containers/food/snacks/condiment/noodles_flavor_packet/ourFlavorPacket
+
+	New()
+		..()
+		ourNoodles = new /obj/item/reagent_containers/food/snacks/instant_noodles(src)
+		ourFlavorPacket = new /obj/item/reagent_containers/food/snacks/condiment/noodles_flavor_packet(src)
+		desc += " You look at the front cover. [ourFlavorPacket.desc]"
+
+	attack_self(mob/user as mob)
+		if(!src.open)
+			src.open_packaging(user)
+			return
+
+	attack_hand(mob/user as mob)  //  src.add_fingerprint(user)   if no prints are found
+		if (src.loc == user && !src.open)
+			src.open_packaging(user)
+			return
+
+		return ..()
+
+	proc/open_packaging(mob/user as mob)
+		src.open = 1
+		boutput(user, "<span style=\"color:red\">As you struggle to open the packaging, it suddenly tears open and all the contents fly out!.</span>")
+		src.icon_state = "instantnoodles_open"
+		user.put_in_hand_or_drop(src.ourNoodles)
+		user.put_in_hand_or_drop(src.ourFlavorPacket)
+
+
+/obj/item/reagent_containers/food/snacks/instant_noodles
+	name = "block of dry instant noodles"
+	desc = "It's a block of dry instant noodles."
+	icon = 'icons/obj/foodNdrink/food_snacks.dmi'
+	icon_state = "instantnoodles_noodles"
+	amount = 5
+	w_class = 2
+	heal_amt = 1
+
+	on_finish(mob/eater)
+		boutput(eater, "<span style=\"color:red\">They're better dry...</span>")
+
+
+/obj/item/reagent_containers/food/snacks/soup/instant_noodles_bowl
+	name = "dry instant noodles"
+	desc = "A dry bowl of instant noodles."
+	icon_state = "noodles_bowl"
+	amount = 5
+	heal_amt = 1
+	var/dry = 1
+	var/usedFlavorPacket = 0
+
+	New(loc, noodleAmount)
+		..()
+		amount = noodleAmount+2
+
+	on_reagent_change()
+		if (src.reagents && src.reagents.total_volume)
+			src.name = "instant noodles"
+			src.desc = "A bowl of instant noodles."
+			src.dry = 0
+			heal_amt = heal_amt + 1
+		else
+			src.name = "[src.dry ? "dry" : "soggy"] instant noodles"
+
+	heal(var/mob/M)
+		if(src.dry)
+			boutput(M, "<span style=\"color:red\">There's nothing in the bowl except for dry noodles...</span>")
+		else //not dry
+			if(!src.usedFlavorPacket)
+				boutput(M, "<span style=\"color:red\">They don't taste very well...</span>")
+			else
+				boutput(M, "<span style=\"color:blue\">They taste alright with the flavor packet. Not great, but alright...</span>")
+				if(prob(20)) //chance of college trauma
+					var/recalling = pick("You recall that one time when", "You remember that one day when", "This brings you back to that time when", "You experience a sudden flashback to that one moment when")
+					var/where = pick("you were in your college dorm room by yourself", "you were in your dorm room with your roommate", "you were at your table in your dorm room")
+					var/eating = pick("calmly eating a similar bowl of instant noodles", "finishing up a bowl of instant noodles", "eating a bowl of instant noodles")
+					var/whatHappened = pick("trying to get over the fact you just moved in and barely knew anyone or your surroundings", "trying to forget a quarrel you had with your friend", "trying to grasp the school subjects you didn't understand", "because you were too anxious to go to an actual diner for proper food", "because you don't know how to cook by yourself")
+					var/lament = pick("missing your mom's cooking", "wanting to just go home", "hoping for all of it to end soon", "wondering how your family's doing back home", "thinking about your college tuition")
+
+					var/displayText = "[recalling] [where] [eating] [whatHappened], all the while [lament]."
+					boutput(M, "<span style=\"color:red\">[displayText]</span>")
+					if(prob(50))
+						M.emote("cry")
+					else
+						M.emote("sniff")
+		..()
+
+	attackby(obj/item/W as obj, mob/user as mob)
+		if (istype(W, /obj/item/reagent_containers/food/snacks/condiment/noodles_flavor_packet))
+			if(!usedFlavorPacket)
+				usedFlavorPacket = 1
+				heal_amt = heal_amt + 1
+
+	disposing()
+		if (src.amount < 1)
+			new /obj/item/reagent_containers/food/drinks/bowl(get_turf(src))
+		..()
+
+	is_open_container()
+		return 1
+
+///////////////////// end of assjam instantnoodlios by Gerhazo, inspired and based on sprites by Jaimsey ///////////////////////////
+
+
 /obj/item/reagent_containers/food/snacks/waffles
 	name = "waffles"
 	desc = "Mmm, waffles"

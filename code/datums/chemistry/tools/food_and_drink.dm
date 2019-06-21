@@ -380,6 +380,21 @@
 			src.overlays += src.fluid_image
 
 	attackby(obj/item/W as obj, mob/user as mob)
+		if (istype(W, /obj/item/reagent_containers/food/snacks/instant_noodles))
+			var /obj/item/reagent_containers/food/snacks/instant_noodles/drynoodles = W
+			var/obj/newinstantnoodles = new /obj/item/reagent_containers/food/snacks/soup/instant_noodles_bowl(get_turf(src), drynoodles.amount)
+			newinstantnoodles.reagents = src.reagents
+			if (newinstantnoodles.reagents)
+				newinstantnoodles.reagents.my_atom = newinstantnoodles
+				src.reagents = null
+			else
+				newinstantnoodles.reagents = new /datum/reagents(50)
+				newinstantnoodles.reagents.my_atom = newinstantnoodles
+			newinstantnoodles.on_reagent_change()
+			user.visible_message("<b>[user]</b> drops the [drynoodles] into [src].", "You drop the [drynoodles] into [src].")
+			qdel(drynoodles)
+			qdel(src)
+
 		if (istype(W, /obj/item/reagent_containers/food/snacks/cereal_box))
 			var/obj/item/reagent_containers/food/snacks/cereal_box/cbox = W
 
